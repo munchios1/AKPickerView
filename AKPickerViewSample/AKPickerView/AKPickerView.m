@@ -115,6 +115,10 @@
 	return self.collectionView.contentOffset;
 }
 
+- (void)selectItem:(NSUInteger)item {
+    [self selectItem:item animated:YES notifySelection:NO];
+}
+
 #pragma mark -
 
 - (void)setDelegate:(id<AKPickerViewDelegate>)delegate
