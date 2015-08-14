@@ -13,6 +13,12 @@ typedef NS_ENUM(NSInteger, AKPickerViewStyle) {
 	AKPickerViewStyleFlat
 };
 
+typedef NS_ENUM(NSInteger, AKPickerImageHeaderType) {
+    AKPeople = 0,
+    AKCalander,
+    AKTimeClock
+};
+
 @class AKPickerView;
 
 @protocol AKPickerViewDataSource <NSObject>
@@ -35,6 +41,7 @@ typedef NS_ENUM(NSInteger, AKPickerViewStyle) {
 @property (nonatomic, weak) id <AKPickerViewDataSource> dataSource;
 @property (nonatomic, weak) id <AKPickerViewDelegate> delegate;
 @property (nonatomic, strong) UIFont *font;
+@property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UIFont *highlightedFont;
 @property (nonatomic, strong) UIColor *textColor;
 @property (nonatomic, strong) UIColor *highlightedTextColor;
@@ -42,6 +49,7 @@ typedef NS_ENUM(NSInteger, AKPickerViewStyle) {
 @property (nonatomic, assign) CGFloat fisheyeFactor; // 0...1; slight value recommended such as 0.0001
 @property (nonatomic, assign, getter=isMaskDisabled) BOOL maskDisabled;
 @property (nonatomic, assign) AKPickerViewStyle pickerViewStyle;
+@property (nonatomic, assign) AKPickerImageHeaderType pickerImageType;
 @property (nonatomic, assign, readonly) NSUInteger selectedItem;
 @property (nonatomic, assign, readonly) CGPoint contentOffset;
 
