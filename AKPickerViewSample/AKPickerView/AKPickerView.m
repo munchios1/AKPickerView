@@ -18,6 +18,7 @@
 @interface AKCollectionViewCell : UICollectionViewCell
 @property (nonatomic, strong) UILabel *label;
 @property (nonatomic, strong) UILabel *monthLabel;
+@property (nonatomic, strong) UILabel *dayLabel;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIFont *font;
 @property (nonatomic, strong) UIFont *highlightedFont;
@@ -321,6 +322,7 @@
     AKCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([AKCollectionViewCell class])
                                                                            forIndexPath:indexPath];
     
+     cell.dayLabel.hidden=YES;
     if ([self.dataSource respondsToSelector:@selector(pickerView:titleForItem:)]) {
         NSString * title= [self.dataSource pickerView:self titleForItem:indexPath.item];
         
@@ -334,11 +336,13 @@
             if (indexPath.row==0) {
                 cell.label.text = @"Today";
                 cell.monthLabel.text = @"";
+                cell.dayLabel.hidden=NO;
             }
             
         }else{
             cell.label.text = title;
             cell.monthLabel.text = @"";
+            cell.dayLabel.hidden=YES;
             
         }
         
@@ -366,7 +370,11 @@
         
         cell.monthLabel.bounds = CGRectMake(cell.label.bounds.origin.x,100,cell.label.bounds.size.width, 20);
         
-        
+        cell.dayLabel.text = @"Today";
+        cell.dayLabel.textColor = self.textColor;
+        cell.dayLabel.highlightedTextColor = self.highlightedTextColor;
+        cell.dayLabel.font = self.font;
+        cell.dayLabel.bounds = CGRectMake(cell.label.bounds.origin.x,0,cell.label.bounds.size.width, 50);
             
         if ([self.delegate respondsToSelector:@selector(pickerView:marginForItem:)]) {
             CGSize margin = [self.delegate pickerView:self marginForItem:indexPath.item];
@@ -514,6 +522,21 @@
                                       //  UIViewAutoresizingFlexibleRightMargin);
     [self.contentView addSubview:self.monthLabel];
     
+    self.dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.label.frame.origin.x,20, self.label.frame.size.width, 50)];
+    self.dayLabel.backgroundColor = [UIColor whiteColor];
+    self.dayLabel.textAlignment = NSTextAlignmentCenter;
+    self.dayLabel.textColor = [UIColor grayColor];
+    self.dayLabel.numberOfLines = 1;
+    self.dayLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    self.dayLabel.highlightedTextColor = [UIColor blackColor];
+    self.dayLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+    // self.monthLabel.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin |
+    //UIViewAutoresizingFlexibleLeftMargin |
+    //  UIViewAutoresizingFlexibleBottomMargin |
+    //  UIViewAutoresizingFlexibleRightMargin);
+    [self.contentView addSubview:self.dayLabel];
+    
+    
     self.imageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
     self.imageView.backgroundColor = [UIColor clearColor];
     self.imageView.contentMode = UIViewContentModeCenter;
@@ -551,14 +574,18 @@
  
     self.label.font = self.selected ? self.highlightedFont : self.font;
     self.monthLabel.font = self.selected ? [UIFont systemFontOfSize:12.0f] : [UIFont systemFontOfSize:9.0f];
-
+    
+    
+ self.dayLabel.font = self.selected ? self.highlightedFont : self.font;
   
     if (self.selected) {
         self.label.textColor=[UIColor darkGrayColor];
          self.monthLabel.textColor=[UIColor darkGrayColor];
+         self.dayLabel.textColor=[UIColor darkGrayColor];
     }else{
         self.label.textColor=[UIColor lightGrayColor];
         self.monthLabel.textColor=[UIColor lightGrayColor];
+         self.dayLabel.textColor=[UIColor lightGrayColor];
     }
   
 //    if (self.selected==YES) {
