@@ -70,7 +70,7 @@
     self.intercepter.delegate = self.delegate;
     self.collectionView.delegate = self.intercepter;
     
-   
+    
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -145,18 +145,18 @@
 {
     _maskDisabled = maskDisabled;
     
-//    self.collectionView.layer.mask = maskDisabled ? nil : ({
-//        CAGradientLayer *maskLayer = [CAGradientLayer layer];
-//        maskLayer.frame = self.collectionView.bounds;
-//        maskLayer.colors = @[(id)[[UIColor clearColor] CGColor],
-//                             (id)[[UIColor blackColor] CGColor],
-//                             (id)[[UIColor blackColor] CGColor],
-//                             (id)[[UIColor clearColor] CGColor],];
-//        maskLayer.locations = @[@0.0, @0.33, @0.66, @1.0];
-//        maskLayer.startPoint = CGPointMake(0.0, 0.0);
-//        maskLayer.endPoint = CGPointMake(1.0, 0.0);
-//        maskLayer;
-//    });
+    //    self.collectionView.layer.mask = maskDisabled ? nil : ({
+    //        CAGradientLayer *maskLayer = [CAGradientLayer layer];
+    //        maskLayer.frame = self.collectionView.bounds;
+    //        maskLayer.colors = @[(id)[[UIColor clearColor] CGColor],
+    //                             (id)[[UIColor blackColor] CGColor],
+    //                             (id)[[UIColor blackColor] CGColor],
+    //                             (id)[[UIColor clearColor] CGColor],];
+    //        maskLayer.locations = @[@0.0, @0.33, @0.66, @1.0];
+    //        maskLayer.startPoint = CGPointMake(0.0, 0.0);
+    //        maskLayer.endPoint = CGPointMake(1.0, 0.0);
+    //        maskLayer;
+    //    });
     if (self.pickerImageType==AKPeople) {
         UIImageView * vw =[[UIImageView alloc]initWithFrame:CGRectMake(10,8, 35,35)];
         vw.image=[UIImage imageNamed:@"rpeople"];
@@ -179,7 +179,7 @@
         [self.collectionView addSubview:vw];
     }
     
-   
+    
 }
 
 #pragma mark -
@@ -322,7 +322,7 @@
     AKCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([AKCollectionViewCell class])
                                                                            forIndexPath:indexPath];
     
-     cell.dayLabel.hidden=YES;
+    cell.dayLabel.hidden=YES;
     if ([self.dataSource respondsToSelector:@selector(pickerView:titleForItem:)]) {
         NSString * title= [self.dataSource pickerView:self titleForItem:indexPath.item];
         
@@ -332,8 +332,11 @@
             NSArray *arr = [title componentsSeparatedByString:@"*"];
             cell.label.text = [arr objectAtIndex:0];
             cell.monthLabel.text = [[arr objectAtIndex:1]substringToIndex:3];
-
-            if (indexPath.row==0) {
+            NSString *isTodayStr;
+            if(arr.count == 3)
+                isTodayStr = [arr objectAtIndex:2];
+            
+            if (indexPath.row==0 && [isTodayStr isEqualToString:@"YES"]) {
                 cell.label.text = @"Today";
                 cell.monthLabel.text = @"";
                 cell.dayLabel.hidden=NO;
@@ -350,10 +353,10 @@
         NSRange range3 = [title rangeOfString:@":"];
         if (range3.location != NSNotFound)
         {
-        cell.label.text =[NSString stringWithFormat:@"%@",[[self getFormatedDateForHours:title] substringToIndex:5]];;
+            cell.label.text =[NSString stringWithFormat:@"%@",[[self getFormatedDateForHours:title] substringToIndex:5]];;
         }
         
-       
+        
         cell.label.textColor = self.textColor;
         cell.label.highlightedTextColor = self.highlightedTextColor;
         cell.label.font = self.font;
@@ -375,7 +378,7 @@
         cell.dayLabel.highlightedTextColor = self.highlightedTextColor;
         cell.dayLabel.font = self.font;
         cell.dayLabel.bounds = CGRectMake(cell.label.bounds.origin.x,0,cell.label.bounds.size.width, 50);
-            
+        
         if ([self.delegate respondsToSelector:@selector(pickerView:marginForItem:)]) {
             CGSize margin = [self.delegate pickerView:self marginForItem:indexPath.item];
             cell.label.frame = CGRectInset(cell.label.frame, -margin.width, -margin.height);
@@ -516,10 +519,10 @@
     self.monthLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     self.monthLabel.highlightedTextColor = [UIColor blackColor];
     self.monthLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-   // self.monthLabel.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin |
-                                        //UIViewAutoresizingFlexibleLeftMargin |
-                                      //  UIViewAutoresizingFlexibleBottomMargin |
-                                      //  UIViewAutoresizingFlexibleRightMargin);
+    // self.monthLabel.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin |
+    //UIViewAutoresizingFlexibleLeftMargin |
+    //  UIViewAutoresizingFlexibleBottomMargin |
+    //  UIViewAutoresizingFlexibleRightMargin);
     [self.contentView addSubview:self.monthLabel];
     
     self.dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.label.frame.origin.x,20, self.label.frame.size.width, 50)];
@@ -540,7 +543,7 @@
     self.imageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
     self.imageView.backgroundColor = [UIColor clearColor];
     self.imageView.contentMode = UIViewContentModeCenter;
-//    self.imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    //    self.imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.contentView addSubview:self.imageView];
 }
 
@@ -571,36 +574,36 @@
     //[transition setDuration:0.15];
     //[self.label.layer addAnimation:transition forKey:nil];
     
- 
+    
     self.label.font = self.selected ? self.highlightedFont : self.font;
     self.monthLabel.font = self.selected ? [UIFont systemFontOfSize:12.0f] : [UIFont systemFontOfSize:9.0f];
     
     
- self.dayLabel.font = self.selected ? self.highlightedFont : self.font;
-  
+    self.dayLabel.font = self.selected ? self.highlightedFont : self.font;
+    
     if (self.selected) {
         self.label.textColor=[UIColor darkGrayColor];
-         self.monthLabel.textColor=[UIColor darkGrayColor];
-         self.dayLabel.textColor=[UIColor darkGrayColor];
+        self.monthLabel.textColor=[UIColor darkGrayColor];
+        self.dayLabel.textColor=[UIColor darkGrayColor];
     }else{
         self.label.textColor=[UIColor lightGrayColor];
         self.monthLabel.textColor=[UIColor lightGrayColor];
-         self.dayLabel.textColor=[UIColor lightGrayColor];
+        self.dayLabel.textColor=[UIColor lightGrayColor];
     }
-  
-//    if (self.selected==YES) {
-//        [UIView animateWithDuration:0.2 animations:^{
-//            self.label.transform = CGAffineTransformMakeScale(1.5, 1.5);
-//        } completion:^(BOOL finished) {
-//            self.label.transform = CGAffineTransformIdentity;
-//            self.label.font = self.selected ? self.highlightedFont : self.font;
-//            self.monthLabel.font = self.selected ? [UIFont systemFontOfSize:12.0f] : [UIFont systemFontOfSize:9.0f];
-//                   }];
-//    }else{
-//     self.label.font = self.selected ? self.highlightedFont : self.font;
-//     self.monthLabel.font = self.selected ? [UIFont systemFontOfSize:12.0f] : [UIFont systemFontOfSize:9.0f];
-//    }
-  
+    
+    //    if (self.selected==YES) {
+    //        [UIView animateWithDuration:0.2 animations:^{
+    //            self.label.transform = CGAffineTransformMakeScale(1.5, 1.5);
+    //        } completion:^(BOOL finished) {
+    //            self.label.transform = CGAffineTransformIdentity;
+    //            self.label.font = self.selected ? self.highlightedFont : self.font;
+    //            self.monthLabel.font = self.selected ? [UIFont systemFontOfSize:12.0f] : [UIFont systemFontOfSize:9.0f];
+    //                   }];
+    //    }else{
+    //     self.label.font = self.selected ? self.highlightedFont : self.font;
+    //     self.monthLabel.font = self.selected ? [UIFont systemFontOfSize:12.0f] : [UIFont systemFontOfSize:9.0f];
+    //    }
+    
     
 }
 
