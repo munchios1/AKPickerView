@@ -323,9 +323,10 @@
                                                                            forIndexPath:indexPath];
     
     cell.dayLabel.hidden=YES;
+    
     if ([self.dataSource respondsToSelector:@selector(pickerView:titleForItem:)]) {
         NSString * title= [self.dataSource pickerView:self titleForItem:indexPath.item];
-        
+
         NSRange range = [title rangeOfString:@"*"];
         if (range.location != NSNotFound)
         {
@@ -335,27 +336,26 @@
             NSString *isTodayStr;
             if(arr.count == 3)
                 isTodayStr = [arr objectAtIndex:2];
-            
+
             if (indexPath.row==0 && [isTodayStr isEqualToString:@"YES"]) {
                 cell.label.text = @"Today";
-                cell.monthLabel.text = @"";
-                cell.dayLabel.hidden=NO;
+                //cell.monthLabel.text = @"";
+                cell.dayLabel.hidden=YES;
+                cell.monthLabel.hidden = YES;
+            }else {
+                cell.monthLabel.hidden = NO;
             }
-            
         }else{
             cell.label.text = title;
             cell.monthLabel.text = @"";
             cell.dayLabel.hidden=YES;
-            
         }
-        
         
         NSRange range3 = [title rangeOfString:@":"];
         if (range3.location != NSNotFound)
         {
-            cell.label.text =[NSString stringWithFormat:@"%@",[[self getFormatedDateForHours:title] substringToIndex:5]];;
+            cell.label.text =[NSString stringWithFormat:@"%@",[[self getFormatedDateForHours:title] substringToIndex:5]];
         }
-        
         
         cell.label.textColor = self.textColor;
         cell.label.highlightedTextColor = self.highlightedTextColor;
@@ -364,14 +364,10 @@
         cell.highlightedFont = self.highlightedFont;
         cell.label.bounds = (CGRect){CGPointZero, [self sizeForString:title]};
         
-        
-        
         cell.monthLabel.textColor = self.textColor;
         cell.monthLabel.highlightedTextColor = self.highlightedTextColor;
         cell.monthLabel.font = [UIFont systemFontOfSize:9.0f];
-        
-        
-        cell.monthLabel.bounds = CGRectMake(cell.label.bounds.origin.x,100,cell.label.bounds.size.width, 20);
+        cell.monthLabel.frame = CGRectMake(cell.label.bounds.origin.x,CGRectGetMaxY(cell.label.frame),CGRectGetWidth(cell.label.bounds), 20);
         
         cell.dayLabel.text = @"Today";
         cell.dayLabel.textColor = self.textColor;
@@ -382,11 +378,11 @@
         if ([self.delegate respondsToSelector:@selector(pickerView:marginForItem:)]) {
             CGSize margin = [self.delegate pickerView:self marginForItem:indexPath.item];
             cell.label.frame = CGRectInset(cell.label.frame, -margin.width, -margin.height);
-            
         }
         if ([self.delegate respondsToSelector:@selector(pickerView:configureLabel:forItem:)]) {
             [self.delegate pickerView:self configureLabel:cell.label forItem:indexPath.item];
         }
+    
     } else if ([self.dataSource respondsToSelector:@selector(pickerView:imageForItem:)]) {
         cell.imageView.image = [self.dataSource pickerView:self imageForItem:indexPath.item];
     }
@@ -519,10 +515,12 @@
     self.monthLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     self.monthLabel.highlightedTextColor = [UIColor blackColor];
     self.monthLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-    // self.monthLabel.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin |
-    //UIViewAutoresizingFlexibleLeftMargin |
-    //  UIViewAutoresizingFlexibleBottomMargin |
-    //  UIViewAutoresizingFlexibleRightMargin);
+    /*
+    self.monthLabel.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin |
+                                   UIViewAutoresizingFlexibleLeftMargin |
+                                   UIViewAutoresizingFlexibleBottomMargin |
+                                   UIViewAutoresizingFlexibleRightMargin);
+    */
     [self.contentView addSubview:self.monthLabel];
     
     self.dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.label.frame.origin.x,20, self.label.frame.size.width, 50)];
